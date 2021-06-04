@@ -17,8 +17,11 @@ public class MainActivity extends AppCompatActivity {
     private float firstVal;
     private float secondVal;
     private int calcAction = 0;
+    TextView calcText;
+    TextView resultCalcText;
     String result;
-    private final TextView calcText = findViewById(R.id.calcTextView);
+    boolean isEmpty = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +29,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         orientation = Configuration.ORIENTATION_PORTRAIT;
 
-        Button buttonAC = findViewById(R.id.button_AC);
-        Button buttonDel = findViewById(R.id.button_Del);
+        resultCalcText = findViewById(R.id.calcResultTextView);
+        calcText = findViewById(R.id.calcTextView);
+
+        Button buttonAC = findViewById(R.id.button_ac);
+        Button buttonDel = findViewById(R.id.button_del);
         Button buttonPercent = findViewById(R.id.button_percent);
         Button buttonDivide = findViewById(R.id.button_divide);
         Button buttonOne = findViewById(R.id.button_1);
@@ -46,59 +52,91 @@ public class MainActivity extends AppCompatActivity {
         Button buttonPoint = findViewById(R.id.button_point);
         Button buttonEqual = findViewById(R.id.button_equals);
 
-        buttonAC.setOnClickListener(v -> calcText.setText("0"));
+        buttonAC.setOnClickListener(v -> {
+            calcText.setText("0");
+            resultCalcText.setText("");
+            result = "0";
+            isEmpty = true;
+            calcAction = 0;
+        });
 
         buttonDel.setOnClickListener(v -> {
             if (calcAction != 0) {
                 result = calculate();
-                calcText.setText(result);
+                firstVal = Float.parseFloat(result);
+
+            } else {
                 firstVal = Float.parseFloat(calcText.getText().toString());
             }
             calcAction = 1;
-            calcText.setText("0");
+            isEmpty = true;
         });
 
         buttonPercent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (calcText.getText().equals("")) {
+                    return;
+                } else if (calcAction != 0){
+                    result = calculate();
+                    firstVal = Float.parseFloat(result);
+                    resultCalcText.setText(result);
 
+                } else {
+                    firstVal = Float.parseFloat(calcText.getText().toString());
+                }
+                calcAction = 1;
+                isEmpty = true;
+                calcText.setText("");
             }
         });
 
         buttonDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (calcAction != 0) {
+                    result = calculate();
+                    firstVal = Float.parseFloat(result);
+                    calcText.setText(result);
 
+                } else {
+                    firstVal = Float.parseFloat(calcText.getText().toString());
+                }
+                calcAction = 2;
+                isEmpty = true;
             }
         });
 
         buttonOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calcText.getText().equals("0")) {
+                if (isEmpty) {
                     calcText.setText("1");
+                    isEmpty = false;
                 } else {
                     calcText.append("1");
                 }
             }
         });
 
-        buttonOne.setOnClickListener(new View.OnClickListener() {
+        buttonTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calcText.getText().equals("0")) {
+                if (isEmpty) {
                     calcText.setText("2");
+                    isEmpty = false;
                 } else {
                     calcText.append("2");
                 }
             }
         });
 
-        buttonOne.setOnClickListener(new View.OnClickListener() {
+        buttonThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calcText.getText().equals("0")) {
+                if (isEmpty) {
                     calcText.setText("3");
+                    isEmpty = false;
                 } else {
                     calcText.append("3");
                 }
@@ -108,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String calculate() {
+        calcText = findViewById(R.id.calcTextView);
         secondVal = Float.parseFloat(calcText.getText().toString());
         switch (calcAction) {
             case (1):

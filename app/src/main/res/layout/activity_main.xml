@@ -10,23 +10,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/calcResultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="@string/_0"
+        android:textSize="42sp"
+        app:layout_constraintTop_toBottomOf="@+id/calcTextView"
+        tools:layout_editor_absoluteX="16dp" />
+
     <Button
-        android:id="@+id/button_AC"
+        android:id="@+id/button_ac"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/_AC"
         android:textColor="@color/black"
         android:textSize="@dimen/button_text"
         app:layout_constraintBottom_toTopOf="@+id/button_1"
-        app:layout_constraintEnd_toStartOf="@+id/button_Del"
+        app:layout_constraintEnd_toStartOf="@+id/button_del"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/button_Del"
+        app:layout_constraintTop_toTopOf="@id/button_del"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/button_Del"
+        android:id="@+id/button_del"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/_del"
@@ -35,7 +45,7 @@
         app:layout_constraintVertical_bias="1"
         app:layout_constraintBottom_toTopOf="@+id/button_2"
         app:layout_constraintEnd_toStartOf="@+id/button_percent"
-        app:layout_constraintStart_toEndOf="@+id/button_AC"
+        app:layout_constraintStart_toEndOf="@+id/button_ac"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -49,8 +59,8 @@
         android:textSize="@dimen/button_text"
         app:layout_constraintBottom_toTopOf="@id/button_3"
         app:layout_constraintEnd_toStartOf="@id/button_divide"
-        app:layout_constraintStart_toEndOf="@+id/button_Del"
-        app:layout_constraintTop_toTopOf="@id/button_Del"
+        app:layout_constraintStart_toEndOf="@+id/button_del"
+        app:layout_constraintTop_toTopOf="@id/button_del"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
@@ -127,7 +137,7 @@
         app:layout_constraintEnd_toStartOf="@+id/button_2"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_AC"
+        app:layout_constraintTop_toBottomOf="@+id/button_ac"
 
         app:layout_constraintVertical_chainStyle="packed" />
     <Button
@@ -140,7 +150,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_5"
         app:layout_constraintEnd_toStartOf="@+id/button_3"
         app:layout_constraintStart_toEndOf="@+id/button_1"
-        app:layout_constraintTop_toBottomOf="@id/button_Del" />
+        app:layout_constraintTop_toBottomOf="@id/button_del" />
     <Button
         android:id="@+id/button_3"
         android:layout_width="wrap_content"
@@ -259,7 +269,6 @@
         android:layout_height="wrap_content"
         android:textSize="42sp"
         android:gravity="end"
-        android:text="@string/_0"
         tools:layout_editor_absoluteX="140dp"
         tools:layout_editor_absoluteY="51dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
