@@ -13,15 +13,14 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    public static int calcAction = 0;
     private int orientation;
-    private float firstVal;
-    private float secondVal;
-    private int calcAction = 0;
+    CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
     TextView calcText;
     TextView resultCalcText;
     String result;
     boolean isEmpty = true;
-
+    private boolean isSolid = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,115 +57,60 @@ public class MainActivity extends AppCompatActivity {
             result = "0";
             isEmpty = true;
             calcAction = 0;
+            calcDataAndMethods.setSolid(true);
         });
 
         buttonDel.setOnClickListener(v -> {
-            if (calcAction != 0) {
-                result = calculate();
-                firstVal = Float.parseFloat(result);
-
-            } else {
-                firstVal = Float.parseFloat(calcText.getText().toString());
-            }
-            calcAction = 1;
-            isEmpty = true;
+            calcDataAndMethods.pushButtonDel(calcText);
         });
 
         buttonPercent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calcText.getText().equals("")) {
-                    return;
-                } else if (calcAction != 0){
-                    result = calculate();
-                    firstVal = Float.parseFloat(result);
-                    resultCalcText.setText(result);
-
-                } else {
-                    firstVal = Float.parseFloat(calcText.getText().toString());
-                }
-                calcAction = 1;
-                isEmpty = true;
-                calcText.setText("");
+                calcDataAndMethods.pushButtonMath(1, calcText, resultCalcText);
             }
         });
 
         buttonDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calcAction != 0) {
-                    result = calculate();
-                    firstVal = Float.parseFloat(result);
-                    calcText.setText(result);
-
-                } else {
-                    firstVal = Float.parseFloat(calcText.getText().toString());
-                }
-                calcAction = 2;
-                isEmpty = true;
+                calcDataAndMethods.pushButtonMath(2, calcText, resultCalcText);
             }
         });
 
         buttonOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isEmpty) {
-                    calcText.setText("1");
-                    isEmpty = false;
-                } else {
-                    calcText.append("1");
-                }
+                calcDataAndMethods.addNumber("1", calcText);
             }
         });
 
         buttonTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isEmpty) {
-                    calcText.setText("2");
-                    isEmpty = false;
-                } else {
-                    calcText.append("2");
-                }
+                calcDataAndMethods.addNumber("2", calcText);
             }
         });
 
         buttonThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isEmpty) {
-                    calcText.setText("3");
-                    isEmpty = false;
-                } else {
-                    calcText.append("3");
-                }
+                calcDataAndMethods.addNumber("3", calcText);
+            }
+        });
+
+        buttonPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calcDataAndMethods.pushButtonPoint(calcText);
             }
         });
 
     }
 
-    private String calculate() {
-        calcText = findViewById(R.id.calcTextView);
-        secondVal = Float.parseFloat(calcText.getText().toString());
-        switch (calcAction) {
-            case (1):
-                return String.format(Locale.getDefault(), "%.9f", (firstVal * secondVal / 100));
-            case (2):
-                if (secondVal == 0){
-                    calcAction = 0;
-                    return "division by zero";
-                } else {
-                    return String.format(Locale.getDefault(), "%.9f", (firstVal / secondVal));
-                }
-            case (3):
-                return String.format(Locale.getDefault(), "%.9f", (firstVal * secondVal));
-            case (4):
-                return String.format(Locale.getDefault(), "%.9f", (firstVal - secondVal));
-            case (5):
-                return String.format(Locale.getDefault(), "%.9f", (firstVal + secondVal));
-        }
-        return "0";
-    }
+
+
+
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -191,4 +135,5 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         setBackgroundImage(orientation);
     }
+
 }
