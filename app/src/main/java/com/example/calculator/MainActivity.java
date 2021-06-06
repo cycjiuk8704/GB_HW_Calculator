@@ -104,12 +104,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle  instanceState) {
         super.onSaveInstanceState(instanceState);
         instanceState.putSerializable(CALCULATOR, calcDataAndMethods);
+        calcDataAndMethods.setCalcTextData(calcText.getText().toString());
+        calcDataAndMethods.setResultCalcTextData(resultCalcText.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle  instanceState) {
         super.onRestoreInstanceState(instanceState);
         calcDataAndMethods = (CalcDataAndMethods) instanceState.getSerializable(CALCULATOR);
+        calcText.setText(calcDataAndMethods.getCalcTextData());
+        resultCalcText.setText(calcDataAndMethods.getResultCalcTextData());
     }
 
     @Override
