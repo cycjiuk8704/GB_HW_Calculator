@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 
 public class MainActivity extends AppCompatActivity {
     public static int calcAction = 0;
+    private static final String CALCULATOR = "Calculator";
     private int orientation;
     CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
     TextView calcText;
@@ -94,14 +95,22 @@ public class MainActivity extends AppCompatActivity {
 
         buttonPoint.setOnClickListener(v -> calcDataAndMethods.pushButtonPoint(calcText));
 
-        buttonEqual.setOnClickListener(v -> calcDataAndMethods.pushButtonEquals(resultCalcText));
+        buttonEqual.setOnClickListener(v -> calcDataAndMethods.pushButtonEquals(resultCalcText, calcText));
 
 
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle  instanceState) {
+        super.onSaveInstanceState(instanceState);
+        instanceState.putSerializable(CALCULATOR, calcDataAndMethods);
+    }
 
-
-
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle  instanceState) {
+        super.onRestoreInstanceState(instanceState);
+        calcDataAndMethods = (CalcDataAndMethods) instanceState.getSerializable(CALCULATOR);
+    }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {

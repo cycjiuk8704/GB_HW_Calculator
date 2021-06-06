@@ -5,11 +5,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-public class CalcDataAndMethods extends AppCompatActivity {
+public class CalcDataAndMethods extends AppCompatActivity implements Serializable {
     private boolean mathButtonDummy = false;
     private boolean init = true;
     private boolean isSolid = true;
@@ -91,9 +92,9 @@ public class CalcDataAndMethods extends AppCompatActivity {
             isSolid = true;
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
 
-        } else if (mathButtonDummy){
+        } else if (mathButtonDummy) {
             calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
-        } else if (!firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))){
+        } else if (!firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
             mathButtonDummy = true;
         } else {
@@ -153,7 +154,7 @@ public class CalcDataAndMethods extends AppCompatActivity {
     }
 
     public void pushButtonDel(TextView calcText) {
-        if (!number.equals("")) {
+        if (!calcText.getText().toString().equals("") && !number.equals("")) {
             calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
             number = number.substring(0, number.length() - 1);
             isSolid = true;
@@ -163,12 +164,18 @@ public class CalcDataAndMethods extends AppCompatActivity {
     public void pushButtonPoint(TextView calcText) {
         if (isSolid) {
             isSolid = false;
-            calcText.append(",");
-            number += ".";
+            init = false;
+            if (number.equals("") || calcText.getText().toString().equals("")) {
+                calcText.append("0,");
+                number += "0.";
+            } else {
+                calcText.append(",");
+                number += ".";
+            }
         }
     }
 
-    public void pushButtonEquals(TextView resultCalcText) {
+    public void pushButtonEquals(TextView resultCalcText, TextView calcText) {
         if (firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             return;
         } else {
@@ -176,6 +183,7 @@ public class CalcDataAndMethods extends AppCompatActivity {
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
             firstVal = result;
         }
+        calcText.setText("");
         number = "0";
         isSolid = true;
         MainActivity.calcAction = 0;
@@ -183,7 +191,7 @@ public class CalcDataAndMethods extends AppCompatActivity {
         result = BigDecimal.valueOf(Double.parseDouble("0.0"));
     }
 
-    private String formatOutput (BigDecimal bd) {
+    private String formatOutput(BigDecimal bd) {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(9);
         df.setMinimumFractionDigits(0);
