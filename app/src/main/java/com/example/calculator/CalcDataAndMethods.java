@@ -3,14 +3,13 @@ package com.example.calculator;
 import android.annotation.SuppressLint;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-public class CalcDataAndMethods extends AppCompatActivity implements Serializable {
+public class CalcDataAndMethods implements Serializable {
+    private int calcAction = 0;
     private String calcTextData;
     private String resultCalcTextData;
     private boolean mathButtonDummy = false;
@@ -37,34 +36,6 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
         this.resultCalcTextData = resultCalcTextData;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public void setSolid(boolean solid) {
-        isSolid = solid;
-    }
-
-    public void setInit(boolean init) {
-        this.init = init;
-    }
-
-    public void setMathButtonDummy(boolean mathButtonDummy) {
-        this.mathButtonDummy = mathButtonDummy;
-    }
-
-    public void setFirstVal(BigDecimal firstVal) {
-        this.firstVal = firstVal;
-    }
-
-    public void setSecondVal(BigDecimal secondVal) {
-        this.secondVal = secondVal;
-    }
-
-    public void setResult(BigDecimal result) {
-        this.result = result;
-    }
-
     public void addNumber(String num, TextView calcText) {
         if (init && number.equals("0")) {
             number = num;
@@ -81,12 +52,16 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
     }
 
     @SuppressLint("SetTextI18n")
-    public void pushButtonMath(int calcAction, TextView calcText, TextView resultCalcText) {
-        if (calcText.getText().toString().equals("") && result.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+    public void pushButtonMath(int calcAct, TextView calcText, TextView resultCalcText) {
+        if (calcAction == 0 && !firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+            init = false;
+            calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
+        } else if (calcText.getText().toString().equals("")) {
+//            mathButtonDummy = true;
             return;
-        } else if (number.equals("0") && MainActivity.calcAction == 2) {
+        } else if (number.equals("0") && calcAction == 2) {
             resultCalcText.setText("division by zero");
-            MainActivity.calcAction = 0;
+            calcAction = 0;
             number = "0";
             isSolid = true;
             firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
@@ -94,20 +69,20 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
             init = true;
             calcText.setText("");
-            mathButtonDummy = false;
+//            mathButtonDummy = false;
 
-        } else if (MainActivity.calcAction != 0 && result.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
-            result = calculate(MainActivity.calcAction);
+        } else if (calcAction != 0 && result.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+            result = calculate(calcAction);
             firstVal = result;
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-            isSolid = true;
+//            isSolid = true;
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
 
-        } else if (MainActivity.calcAction != 0) {
+        } else if (calcAction != 0) {
             firstVal = result;
-            result = calculate(MainActivity.calcAction);
+            result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-            isSolid = true;
+//            isSolid = true;
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
 
         } else if (mathButtonDummy) {
@@ -115,18 +90,21 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
 
         } else if (!firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
-            mathButtonDummy = true;
+//            mathButtonDummy = true;
 
         } else {
             firstVal = BigDecimal.valueOf(Double.parseDouble(number));
             number = "0";
             isSolid = true;
-            mathButtonDummy = true;
+//            mathButtonDummy = true;
         }
 
-        MainActivity.calcAction = calcAction;
-
-        switch (calcAction) {
+        calcAction = calcAct;
+        String chars = "%/x-+";
+        if (chars.indexOf(calcText.getText().toString().charAt(calcText.getText().toString().length() - 1)) >= 0 ) {
+            calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
+        }
+        switch (calcAct) {
             case (1):
                 calcText.append("%");
                 break;
@@ -145,7 +123,6 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
             default:
                 throw new UnsupportedOperationException("unsupported calcAction value");
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -154,7 +131,7 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
             return firstVal;
         } else {
             secondVal = BigDecimal.valueOf(Double.parseDouble(number));
-            mathButtonDummy = false;
+//            mathButtonDummy = false;
             number = "0";
             switch (calcAction) {
                 case (1):
@@ -199,7 +176,7 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
         if (firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             return;
         } else {
-            result = calculate(MainActivity.calcAction);
+            result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
             firstVal = result;
             calcText.setText("");
@@ -207,8 +184,22 @@ public class CalcDataAndMethods extends AppCompatActivity implements Serializabl
         number = "0";
         isSolid = true;
         init = true;
-        MainActivity.calcAction = 0;
+        calcAction = 0;
         secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
+        result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+    }
+
+    public void pushButtonAC(TextView resultCalcText, TextView calcText) {
+        calcText.setText("");
+        resultCalcText.setText("");
+        calcAction = 0;
+        number = "0";
+        isSolid = true;
+        init = true;
+        mathButtonDummy = false;
+        firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
+        secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
+        result = BigDecimal.valueOf(Double.parseDouble("0.0"));
     }
 
     private String formatOutput(BigDecimal bd) {

@@ -9,10 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.math.BigDecimal;
-
 public class MainActivity extends AppCompatActivity {
-    public static int calcAction = 0;
+
     private static final String CALCULATOR = "Calculator";
     private int orientation;
     CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
@@ -48,18 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonPoint = findViewById(R.id.button_point);
         Button buttonEqual = findViewById(R.id.button_equals);
 
-        buttonAC.setOnClickListener(v -> {
-            calcText.setText("");
-            resultCalcText.setText("");
-            calcAction = 0;
-            calcDataAndMethods.setNumber("0");
-            calcDataAndMethods.setSolid(true);
-            calcDataAndMethods.setInit(true);
-            calcDataAndMethods.setMathButtonDummy(false);
-            calcDataAndMethods.setFirstVal(BigDecimal.valueOf(Double.parseDouble("0.0")));
-            calcDataAndMethods.setSecondVal(BigDecimal.valueOf(Double.parseDouble("0.0")));
-            calcDataAndMethods.setResult(BigDecimal.valueOf(Double.parseDouble("0.0")));
-        });
+        buttonAC.setOnClickListener(v -> calcDataAndMethods.pushButtonAC(resultCalcText, calcText));
 
         buttonDel.setOnClickListener(v -> calcDataAndMethods.pushButtonDel(calcText));
 
