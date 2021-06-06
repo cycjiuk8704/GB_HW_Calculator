@@ -12,9 +12,8 @@ public class CalcDataAndMethods implements Serializable {
     private int calcAction = 0;
     private String calcTextData;
     private String resultCalcTextData;
-    private boolean mathButtonDummy = false;
     private boolean init = true;
-    private boolean isSolid = true;
+    private boolean isInteger = true;
     private String number = "0";
     private BigDecimal firstVal = new BigDecimal("0.0");
     private BigDecimal secondVal = new BigDecimal("0.0");
@@ -57,46 +56,37 @@ public class CalcDataAndMethods implements Serializable {
             init = false;
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
         } else if (calcText.getText().toString().equals("")) {
-//            mathButtonDummy = true;
             return;
         } else if (number.equals("0") && calcAction == 2) {
             resultCalcText.setText("division by zero");
             calcAction = 0;
             number = "0";
-            isSolid = true;
+            isInteger = true;
             firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
             secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
             init = true;
             calcText.setText("");
-//            mathButtonDummy = false;
 
         } else if (calcAction != 0 && result.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             result = calculate(calcAction);
             firstVal = result;
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-//            isSolid = true;
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
 
         } else if (calcAction != 0) {
             firstVal = result;
             result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-//            isSolid = true;
             result = BigDecimal.valueOf(Double.parseDouble("0.0"));
-
-        } else if (mathButtonDummy) {
-            calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
 
         } else if (!firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
-//            mathButtonDummy = true;
 
         } else {
             firstVal = BigDecimal.valueOf(Double.parseDouble(number));
             number = "0";
-            isSolid = true;
-//            mathButtonDummy = true;
+            isInteger = true;
         }
 
         calcAction = calcAct;
@@ -131,7 +121,6 @@ public class CalcDataAndMethods implements Serializable {
             return firstVal;
         } else {
             secondVal = BigDecimal.valueOf(Double.parseDouble(number));
-//            mathButtonDummy = false;
             number = "0";
             switch (calcAction) {
                 case (1):
@@ -154,13 +143,13 @@ public class CalcDataAndMethods implements Serializable {
         if (!calcText.getText().toString().equals("") && !number.equals("")) {
             calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
             number = number.substring(0, number.length() - 1);
-            isSolid = true;
+            isInteger = true;
         }
     }
 
     public void pushButtonPoint(TextView calcText) {
-        if (isSolid) {
-            isSolid = false;
+        if (isInteger) {
+            isInteger = false;
             init = false;
             if (number.equals("") || calcText.getText().toString().equals("")) {
                 calcText.append("0,");
@@ -182,7 +171,7 @@ public class CalcDataAndMethods implements Serializable {
             calcText.setText("");
         }
         number = "0";
-        isSolid = true;
+        isInteger = true;
         init = true;
         calcAction = 0;
         secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
@@ -194,9 +183,8 @@ public class CalcDataAndMethods implements Serializable {
         resultCalcText.setText("");
         calcAction = 0;
         number = "0";
-        isSolid = true;
+        isInteger = true;
         init = true;
-        mathButtonDummy = false;
         firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
         secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
         result = BigDecimal.valueOf(Double.parseDouble("0.0"));
