@@ -1,16 +1,15 @@
 package com.example.calculator;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.Locale;
+import java.math.BigDecimal;
 
 public class MainActivity extends AppCompatActivity {
     public static int calcAction = 0;
@@ -18,9 +17,6 @@ public class MainActivity extends AppCompatActivity {
     CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
     TextView calcText;
     TextView resultCalcText;
-    String result;
-    boolean isEmpty = true;
-    private boolean isSolid = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,59 +48,54 @@ public class MainActivity extends AppCompatActivity {
         Button buttonEqual = findViewById(R.id.button_equals);
 
         buttonAC.setOnClickListener(v -> {
-            calcText.setText("0");
+            calcText.setText("");
             resultCalcText.setText("");
-            result = "0";
-            isEmpty = true;
             calcAction = 0;
+            calcDataAndMethods.setNumber("0");
             calcDataAndMethods.setSolid(true);
+            calcDataAndMethods.setInit(true);
+            calcDataAndMethods.setMathButtonDummy(false);
+            calcDataAndMethods.setFirstVal(BigDecimal.valueOf(Double.parseDouble("0.0")));
+            calcDataAndMethods.setSecondVal(BigDecimal.valueOf(Double.parseDouble("0.0")));
+            calcDataAndMethods.setResult(BigDecimal.valueOf(Double.parseDouble("0.0")));
         });
 
-        buttonDel.setOnClickListener(v -> {
-            calcDataAndMethods.pushButtonDel(calcText);
-        });
+        buttonDel.setOnClickListener(v -> calcDataAndMethods.pushButtonDel(calcText));
 
-        buttonPercent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.pushButtonMath(1, calcText, resultCalcText);
-            }
-        });
+        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(1, calcText, resultCalcText));
 
-        buttonDivide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.pushButtonMath(2, calcText, resultCalcText);
-            }
-        });
+        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(2, calcText, resultCalcText));
 
-        buttonOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.addNumber("1", calcText);
-            }
-        });
+        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber("1", calcText));
 
-        buttonTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.addNumber("2", calcText);
-            }
-        });
+        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber("2", calcText));
 
-        buttonThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.addNumber("3", calcText);
-            }
-        });
+        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber("3", calcText));
 
-        buttonPoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcDataAndMethods.pushButtonPoint(calcText);
-            }
-        });
+        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(3, calcText, resultCalcText));
+
+        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber("4", calcText));
+
+        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber("5", calcText));
+
+        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber("6", calcText));
+
+        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(4, calcText, resultCalcText));
+
+        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber("7", calcText));
+
+        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber("8", calcText));
+
+        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber("9", calcText));
+
+        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(5, calcText, resultCalcText));
+
+        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber("0", calcText));
+
+        buttonPoint.setOnClickListener(v -> calcDataAndMethods.pushButtonPoint(calcText));
+
+        buttonEqual.setOnClickListener(v -> calcDataAndMethods.pushButtonEquals(resultCalcText));
+
 
     }
 
