@@ -12,20 +12,25 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class MainActivity extends AppCompatActivity {
 
     private static final String CALCULATOR = "Calculator";
-    private int orientation;
-    CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
-    TextView calcText;
-    TextView resultCalcText;
+    private CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
+    private TextView calcText;
+    private TextView resultCalcText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        orientation = Configuration.ORIENTATION_PORTRAIT;
+        setBackgroundImage(getResources().getConfiguration().orientation);
 
         resultCalcText = findViewById(R.id.calcResultTextView);
         calcText = findViewById(R.id.calcTextView);
 
+        createButtons();
+
+
+    }
+
+    private void createButtons() {
         Button buttonAC = findViewById(R.id.button_ac);
         Button buttonDel = findViewById(R.id.button_del);
         Button buttonPercent = findViewById(R.id.button_percent);
@@ -50,41 +55,39 @@ public class MainActivity extends AppCompatActivity {
 
         buttonDel.setOnClickListener(v -> calcDataAndMethods.pushButtonDel(calcText));
 
-        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(1, calcText, resultCalcText));
+        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getPERCENT_ACTION(), calcText, resultCalcText));
 
-        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(2, calcText, resultCalcText));
+        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getDIVIDE_ACTION(), calcText, resultCalcText));
 
-        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber("1", calcText));
+        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._1), calcText));
 
-        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber("2", calcText));
+        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._2), calcText));
 
-        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber("3", calcText));
+        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._3), calcText));
 
-        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(3, calcText, resultCalcText));
+        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getMULTIPLY_ACTION(), calcText, resultCalcText));
 
-        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber("4", calcText));
+        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._4), calcText));
 
-        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber("5", calcText));
+        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._5), calcText));
 
-        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber("6", calcText));
+        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._6), calcText));
 
-        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(4, calcText, resultCalcText));
+        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getSUBTRACT_ACTION(), calcText, resultCalcText));
 
-        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber("7", calcText));
+        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._7), calcText));
 
-        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber("8", calcText));
+        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._8), calcText));
 
-        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber("9", calcText));
+        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._9), calcText));
 
-        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(5, calcText, resultCalcText));
+        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getADD_ACTION(), calcText, resultCalcText));
 
-        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber("0", calcText));
+        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._0), calcText));
 
         buttonPoint.setOnClickListener(v -> calcDataAndMethods.pushButtonPoint(calcText));
 
         buttonEqual.setOnClickListener(v -> calcDataAndMethods.pushButtonEquals(resultCalcText, calcText));
-
-
     }
 
     @Override
@@ -106,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        orientation = newConfig.orientation;
         setBackgroundImage(newConfig.orientation);
     }
 
@@ -116,15 +117,10 @@ public class MainActivity extends AppCompatActivity {
         layout = findViewById(R.id.mainLayout);
 
         if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-            layout.setBackgroundResource(R.drawable.calc_bg_v);
-        else if (orientation == Configuration.ORIENTATION_PORTRAIT)
             layout.setBackgroundResource(R.drawable.calc_bg_h);
+        else if (orientation == Configuration.ORIENTATION_PORTRAIT)
+            layout.setBackgroundResource(R.drawable.calc_bg_v);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setBackgroundImage(orientation);
-    }
 
 }

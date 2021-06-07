@@ -1,6 +1,7 @@
 package com.example.calculator;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import java.io.Serializable;
@@ -14,10 +15,16 @@ public class CalcDataAndMethods implements Serializable {
     private String resultCalcTextData;
     private boolean init = true;
     private boolean isInteger = true;
+    private final int PERCENT_ACTION = 1;
     private String number = "0";
-    private BigDecimal firstVal = new BigDecimal("0.0");
-    private BigDecimal secondVal = new BigDecimal("0.0");
-    private BigDecimal result = new BigDecimal("0.0");
+    private final int DIVIDE_ACTION = 2;
+    private final int MULTIPLY_ACTION = 3;
+    private final int SUBTRACT_ACTION = 4;
+    private final int ADD_ACTION = 5;
+    private boolean calcResume = false;
+    private BigDecimal firstVal = BigDecimal.ZERO;
+    private BigDecimal secondVal = BigDecimal.ZERO;
+    private BigDecimal result = BigDecimal.ZERO;
 
     public String getCalcTextData() {
         return calcTextData;
@@ -35,14 +42,37 @@ public class CalcDataAndMethods implements Serializable {
         this.resultCalcTextData = resultCalcTextData;
     }
 
+    public int getPERCENT_ACTION() {
+        return PERCENT_ACTION;
+    }
+
+    public int getDIVIDE_ACTION() {
+        return DIVIDE_ACTION;
+    }
+
+    public int getMULTIPLY_ACTION() {
+        return MULTIPLY_ACTION;
+    }
+
+    public int getSUBTRACT_ACTION() {
+        return SUBTRACT_ACTION;
+    }
+
+    public int getADD_ACTION() {
+        return ADD_ACTION;
+    }
+
     public void addNumber(String num, TextView calcText) {
-        if (init && number.equals("0")) {
-            number = num;
-            calcText.setText(num);
-            init = false;
-        } else if (number.equals("0")) {
-            number = num;
-            calcText.append(num);
+        if (number.equals("0")) {
+            if (init) {
+                number = num;
+                calcText.setText(num);
+                init = false;
+                calcResume = false;
+            } else {
+                number = num;
+                calcText.append(num);
+            }
         } else {
             number = number + num;
             calcText.append(num);
@@ -52,35 +82,36 @@ public class CalcDataAndMethods implements Serializable {
 
     @SuppressLint("SetTextI18n")
     public void pushButtonMath(int calcAct, TextView calcText, TextView resultCalcText) {
-        if (calcAction == 0 && !firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+
+        if (calcAction == 0 && !firstVal.equals(BigDecimal.ZERO) && calcText.getText().toString().equals("")) {
             init = false;
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
         } else if (calcText.getText().toString().equals("")) {
             return;
-        } else if (number.equals("0") && calcAction == 2) {
+        } else if (calcText.getText().toString().equals("0") && calcAction == 2) {
             resultCalcText.setText("division by zero");
             calcAction = 0;
             number = "0";
             isInteger = true;
-            firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
-            secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
-            result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+            firstVal = BigDecimal.ZERO;
+            secondVal = BigDecimal.ZERO;
+            result = BigDecimal.ZERO;
             init = true;
             calcText.setText("");
 
-        } else if (calcAction != 0 && result.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+        } else if (calcAction != 0 && result.equals(BigDecimal.ZERO)) {
             result = calculate(calcAction);
-            firstVal = result;
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-            result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+            firstVal = result;
+            result = BigDecimal.ZERO;
 
         } else if (calcAction != 0) {
             firstVal = result;
             result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
-            result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+            result = BigDecimal.ZERO;
 
-        } else if (!firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+        } else if (!firstVal.equals(BigDecimal.ZERO) && calcResume) {
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
 
         } else {
@@ -88,26 +119,30 @@ public class CalcDataAndMethods implements Serializable {
             number = "0";
             isInteger = true;
         }
+        calcResume = true;
 
         calcAction = calcAct;
-        String chars = "%/x-+";
-        if (chars.indexOf(calcText.getText().toString().charAt(calcText.getText().toString().length() - 1)) >= 0 ) {
-            calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
+        String calcActionText = calcText.getText().toString();
+        if (!TextUtils.isEmpty(calcActionText)) {
+            String lastChar = calcActionText.substring(calcActionText.length() - 1);
+            if (CalcActions.contains(lastChar)){
+                calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
+            }
         }
         switch (calcAct) {
-            case (1):
+            case (PERCENT_ACTION):
                 calcText.append("%");
                 break;
-            case (2):
+            case (DIVIDE_ACTION):
                 calcText.append("/");
                 break;
-            case (3):
+            case (MULTIPLY_ACTION):
                 calcText.append("x");
                 break;
-            case (4):
+            case (SUBTRACT_ACTION):
                 calcText.append("-");
                 break;
-            case (5):
+            case (ADD_ACTION):
                 calcText.append("+");
                 break;
             default:
@@ -123,15 +158,15 @@ public class CalcDataAndMethods implements Serializable {
             secondVal = BigDecimal.valueOf(Double.parseDouble(number));
             number = "0";
             switch (calcAction) {
-                case (1):
+                case (PERCENT_ACTION):
                     return firstVal.multiply(secondVal.divide(BigDecimal.valueOf(100.0d), 9, BigDecimal.ROUND_HALF_UP));
-                case (2):
+                case (DIVIDE_ACTION):
                     return firstVal.divide(secondVal, 9, BigDecimal.ROUND_HALF_UP);
-                case (3):
+                case (MULTIPLY_ACTION):
                     return firstVal.multiply(secondVal);
-                case (4):
+                case (SUBTRACT_ACTION):
                     return firstVal.subtract(secondVal);
-                case (5):
+                case (ADD_ACTION):
                     return firstVal.add(secondVal);
                 default:
                     throw new UnsupportedOperationException("unsupported calcAction value");
@@ -141,7 +176,7 @@ public class CalcDataAndMethods implements Serializable {
 
     public void pushButtonDel(TextView calcText) {
         if (!calcText.getText().toString().equals("") && !number.equals("")) {
-            calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
+            calcText.setText(calcText.getText().toString().subSequence(0, calcText.getText().toString().length() - 1));
             number = number.substring(0, number.length() - 1);
             isInteger = true;
         }
@@ -162,7 +197,7 @@ public class CalcDataAndMethods implements Serializable {
     }
 
     public void pushButtonEquals(TextView resultCalcText, TextView calcText) {
-        if (firstVal.equals(BigDecimal.valueOf(Double.parseDouble("0.0")))) {
+        if (firstVal.equals(BigDecimal.ZERO)) {
             return;
         } else {
             result = calculate(calcAction);
@@ -174,8 +209,9 @@ public class CalcDataAndMethods implements Serializable {
         isInteger = true;
         init = true;
         calcAction = 0;
-        secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
-        result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+        secondVal = BigDecimal.ZERO;
+        result = BigDecimal.ZERO;
+        calcResume = true;
     }
 
     public void pushButtonAC(TextView resultCalcText, TextView calcText) {
@@ -185,9 +221,10 @@ public class CalcDataAndMethods implements Serializable {
         number = "0";
         isInteger = true;
         init = true;
-        firstVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
-        secondVal = BigDecimal.valueOf(Double.parseDouble("0.0"));
-        result = BigDecimal.valueOf(Double.parseDouble("0.0"));
+        firstVal = BigDecimal.ZERO;
+        secondVal = BigDecimal.ZERO;
+        result = BigDecimal.ZERO;
+        calcResume = false;
     }
 
     private String formatOutput(BigDecimal bd) {
