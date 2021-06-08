@@ -55,35 +55,35 @@ public class MainActivity extends AppCompatActivity {
 
         buttonDel.setOnClickListener(v -> calcDataAndMethods.pushButtonDel(calcText));
 
-        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getPERCENT_ACTION(), calcText, resultCalcText));
+        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.PERCENT.getValue(), calcText, resultCalcText));
 
-        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getDIVIDE_ACTION(), calcText, resultCalcText));
+        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.DIVIDE.getValue(), calcText, resultCalcText));
 
-        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._1), calcText));
+        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.ONE.getValue(), calcText));
 
-        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._2), calcText));
+        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.TWO.getValue(), calcText));
 
-        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._3), calcText));
+        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.THREE.getValue(), calcText));
 
-        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getMULTIPLY_ACTION(), calcText, resultCalcText));
+        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.MULTIPLY.getValue(), calcText, resultCalcText));
 
-        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._4), calcText));
+        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.FOUR.getValue(), calcText));
 
-        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._5), calcText));
+        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.FIVE.getValue(), calcText));
 
-        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._6), calcText));
+        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.SIX.getValue(), calcText));
 
-        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getSUBTRACT_ACTION(), calcText, resultCalcText));
+        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.SUBTRACT.getValue(), calcText, resultCalcText));
 
-        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._7), calcText));
+        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.SEVEN.getValue(), calcText));
 
-        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._8), calcText));
+        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.EIGHT.getValue(), calcText));
 
-        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._9), calcText));
+        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.NINE.getValue(), calcText));
 
-        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(calcDataAndMethods.getADD_ACTION(), calcText, resultCalcText));
+        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.ADD.getValue(), calcText, resultCalcText));
 
-        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber(getString(R.string._0), calcText));
+        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.ZERO.getValue(), calcText));
 
         buttonPoint.setOnClickListener(v -> calcDataAndMethods.pushButtonPoint(calcText));
 

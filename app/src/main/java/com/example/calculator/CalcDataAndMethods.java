@@ -10,18 +10,13 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class CalcDataAndMethods implements Serializable {
-    private int calcAction = 0;
+    private String calcAction = "";
     private String calcTextData;
     private String resultCalcTextData;
     private boolean init = true;
     private boolean isInteger = true;
-    private final int PERCENT_ACTION = 1;
     private final String ZERO_VAL_STR = "0";
     private String number = ZERO_VAL_STR;
-    private final int DIVIDE_ACTION = 2;
-    private final int MULTIPLY_ACTION = 3;
-    private final int SUBTRACT_ACTION = 4;
-    private final int ADD_ACTION = 5;
     private boolean calcResume = false;
     private BigDecimal firstVal = BigDecimal.ZERO;
     private BigDecimal secondVal = BigDecimal.ZERO;
@@ -43,26 +38,6 @@ public class CalcDataAndMethods implements Serializable {
         this.resultCalcTextData = resultCalcTextData;
     }
 
-    public int getPERCENT_ACTION() {
-        return PERCENT_ACTION;
-    }
-
-    public int getDIVIDE_ACTION() {
-        return DIVIDE_ACTION;
-    }
-
-    public int getMULTIPLY_ACTION() {
-        return MULTIPLY_ACTION;
-    }
-
-    public int getSUBTRACT_ACTION() {
-        return SUBTRACT_ACTION;
-    }
-
-    public int getADD_ACTION() {
-        return ADD_ACTION;
-    }
-
     public void addNumber(String num, TextView calcText) {
         if (number.equals(ZERO_VAL_STR)) {
             if (init) {
@@ -82,16 +57,16 @@ public class CalcDataAndMethods implements Serializable {
     }
 
     @SuppressLint("SetTextI18n")
-    public void pushButtonMath(int calcAct, TextView calcText, TextView resultCalcText) {
+    public void pushButtonMath(String calcAct, TextView calcText, TextView resultCalcText) {
 
-        if (calcAction == 0 && !firstVal.equals(BigDecimal.ZERO) && calcText.getText().toString().equals("")) {
+        if (calcAction.isEmpty() && !firstVal.equals(BigDecimal.ZERO) && calcText.getText().toString().equals("")) {
             init = false;
             calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
         } else if (calcText.getText().toString().equals("")) {
             return;
-        } else if (calcText.getText().toString().equals(ZERO_VAL_STR) && calcAction == 2) {
+        } else if (calcText.getText().toString().equals(ZERO_VAL_STR) && calcAction.equals(CalcActions.DIVIDE.getValue())) {
             resultCalcText.setText("division by zero");
-            calcAction = 0;
+            calcAction = "";
             number = ZERO_VAL_STR;
             isInteger = true;
             firstVal = BigDecimal.ZERO;
@@ -100,13 +75,13 @@ public class CalcDataAndMethods implements Serializable {
             init = true;
             calcText.setText("");
 
-        } else if (calcAction != 0 && result.equals(BigDecimal.ZERO)) {
+        } else if (!calcAction.isEmpty() && result.equals(BigDecimal.ZERO)) {
             result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
             firstVal = result;
             result = BigDecimal.ZERO;
 
-        } else if (calcAction != 0) {
+        } else if (!calcAction.isEmpty()) {
             firstVal = result;
             result = calculate(calcAction);
             resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
@@ -131,19 +106,19 @@ public class CalcDataAndMethods implements Serializable {
             }
         }
         switch (calcAct) {
-            case (PERCENT_ACTION):
+            case ("%"):
                 calcText.append("%");
                 break;
-            case (DIVIDE_ACTION):
+            case ("/"):
                 calcText.append("/");
                 break;
-            case (MULTIPLY_ACTION):
+            case ("x"):
                 calcText.append("x");
                 break;
-            case (SUBTRACT_ACTION):
+            case ("-"):
                 calcText.append("-");
                 break;
-            case (ADD_ACTION):
+            case ("+"):
                 calcText.append("+");
                 break;
             default:
@@ -152,22 +127,22 @@ public class CalcDataAndMethods implements Serializable {
     }
 
     @SuppressLint("SetTextI18n")
-    private BigDecimal calculate(int calcAction) {
+    private BigDecimal calculate(String calcAction) {
         if (number.equals(ZERO_VAL_STR)) {
             return firstVal;
         } else {
             secondVal = BigDecimal.valueOf(Double.parseDouble(number));
             number = ZERO_VAL_STR;
             switch (calcAction) {
-                case (PERCENT_ACTION):
+                case ("%"):
                     return firstVal.multiply(secondVal.divide(BigDecimal.valueOf(100.0d), 9, BigDecimal.ROUND_HALF_UP));
-                case (DIVIDE_ACTION):
+                case ("/"):
                     return firstVal.divide(secondVal, 9, BigDecimal.ROUND_HALF_UP);
-                case (MULTIPLY_ACTION):
+                case ("x"):
                     return firstVal.multiply(secondVal);
-                case (SUBTRACT_ACTION):
+                case ("-"):
                     return firstVal.subtract(secondVal);
-                case (ADD_ACTION):
+                case ("+"):
                     return firstVal.add(secondVal);
                 default:
                     throw new UnsupportedOperationException("unsupported calcAction value");
@@ -209,7 +184,7 @@ public class CalcDataAndMethods implements Serializable {
         number = ZERO_VAL_STR;
         isInteger = true;
         init = true;
-        calcAction = 0;
+        calcAction = "";
         secondVal = BigDecimal.ZERO;
         result = BigDecimal.ZERO;
         calcResume = true;
@@ -218,7 +193,7 @@ public class CalcDataAndMethods implements Serializable {
     public void pushButtonAC(TextView resultCalcText, TextView calcText) {
         calcText.setText("");
         resultCalcText.setText("");
-        calcAction = 0;
+        calcAction = "";
         number = ZERO_VAL_STR;
         isInteger = true;
         init = true;
