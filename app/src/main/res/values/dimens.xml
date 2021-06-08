@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="button_text">18sp</dimen>
+    <dimen name="button_text">20sp</dimen>
+    <dimen name="textview_text_size">42sp</dimen>
+    <dimen name="button_0_width">0dp</dimen>
+    <dimen name="textview_margin">20dp</dimen>
 
 </resources>
