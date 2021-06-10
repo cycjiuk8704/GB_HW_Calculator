@@ -2,6 +2,8 @@ package com.example.calculator;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -9,12 +11,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Parcelable {
 
     private static final String CALCULATOR = "Calculator";
     private CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
+    public static final Creator<MainActivity> CREATOR = new Creator<MainActivity>() {
+        @Override
+        public MainActivity createFromParcel(Parcel in) {
+            return new MainActivity(in);
+        }
+
+        @Override
+        public MainActivity[] newArray(int size) {
+            return new MainActivity[size];
+        }
+    };
     private TextView calcText;
     private TextView resultCalcText;
+    private String[] calcState = {"", "0"};
+
+    public MainActivity() {
+    }
+
+    protected MainActivity(Parcel in) {
+        calcState = in.createStringArray();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +46,17 @@ public class MainActivity extends AppCompatActivity {
         resultCalcText = findViewById(R.id.calcResultTextView);
         calcText = findViewById(R.id.calcTextView);
 
+        calcText.setText(calcState[0]);
+        resultCalcText.setText(calcState[1]);
+
         createButtons();
 
 
     }
 
     private void createButtons() {
+        calcState[0] = calcText.getText().toString();
+        calcState[1] = resultCalcText.getText().toString();
         Button buttonAC = findViewById(R.id.button_ac);
         Button buttonDel = findViewById(R.id.button_del);
         Button buttonPercent = findViewById(R.id.button_percent);
@@ -51,59 +77,120 @@ public class MainActivity extends AppCompatActivity {
         Button buttonPoint = findViewById(R.id.button_point);
         Button buttonEqual = findViewById(R.id.button_equals);
 
-        buttonAC.setOnClickListener(v -> calcDataAndMethods.pushButtonAC(resultCalcText, calcText));
+        buttonAC.setOnClickListener(v -> {
+            calcDataAndMethods.pushButtonAC();
+            calcText.setText("");
+            resultCalcText.setText("");
+        });
 
-        buttonDel.setOnClickListener(v -> calcDataAndMethods.pushButtonDel(calcText));
+        buttonDel.setOnClickListener(v -> {calcState[0] = calcDataAndMethods.pushButtonDel(calcState[0]);
+            calcText.setText(calcState[0]);});
 
-        buttonPercent.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.PERCENT.getValue(), calcText, resultCalcText));
+        buttonPercent.setOnClickListener(v -> {
+            calcState = calcDataAndMethods.pushButtonMath(CalcActions.PERCENT.getValue(), calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);
+        });
 
-        buttonDivide.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.DIVIDE.getValue(), calcText, resultCalcText));
+        buttonDivide.setOnClickListener(v -> {
+            calcState = calcDataAndMethods.pushButtonMath(CalcActions.DIVIDE.getValue(), calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);
+        });
 
-        buttonOne.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.ONE.getValue(), calcText));
+        buttonOne.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.ONE.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonTwo.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.TWO.getValue(), calcText));
+        buttonTwo.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.TWO.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonThree.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.THREE.getValue(), calcText));
+        buttonThree.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.THREE.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonMultiply.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.MULTIPLY.getValue(), calcText, resultCalcText));
+        buttonMultiply.setOnClickListener(v -> {
+            calcState = calcDataAndMethods.pushButtonMath(CalcActions.MULTIPLY.getValue(), calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);
+        });
 
-        buttonFour.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.FOUR.getValue(), calcText));
+        buttonFour.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.FOUR.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonFive.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.FIVE.getValue(), calcText));
+        buttonFive.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.FIVE.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonSix.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.SIX.getValue(), calcText));
+        buttonSix.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.SIX.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonMinus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.SUBTRACT.getValue(), calcText, resultCalcText));
+        buttonMinus.setOnClickListener(v -> {
+            calcState = calcDataAndMethods.pushButtonMath(CalcActions.SUBTRACT.getValue(), calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);
+        });
 
-        buttonSeven.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.SEVEN.getValue(), calcText));
+        buttonSeven.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.SEVEN.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonEight.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.EIGHT.getValue(), calcText));
+        buttonEight.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.EIGHT.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonNine.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.NINE.getValue(), calcText));
+        buttonNine.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.NINE.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonPLus.setOnClickListener(v -> calcDataAndMethods.pushButtonMath(CalcActions.ADD.getValue(), calcText, resultCalcText));
+        buttonPLus.setOnClickListener(v -> {
+            calcState = calcDataAndMethods.pushButtonMath(CalcActions.ADD.getValue(), calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);
+        });
 
-        buttonZero.setOnClickListener(v -> calcDataAndMethods.addNumber(Numbers.ZERO.getValue(), calcText));
+        buttonZero.setOnClickListener(v -> {
+            calcState[0] = calcDataAndMethods.addNumber(Numbers.ZERO.getValue(), calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonPoint.setOnClickListener(v -> calcDataAndMethods.pushButtonPoint(calcText));
+        buttonPoint.setOnClickListener(v -> {calcState[0] = calcDataAndMethods.pushButtonPoint(calcState[0]);
+            calcText.setText(calcState[0]);
+        });
 
-        buttonEqual.setOnClickListener(v -> calcDataAndMethods.pushButtonEquals(resultCalcText, calcText));
+        buttonEqual.setOnClickListener(v -> {calcState = calcDataAndMethods.pushButtonEquals(calcState[0], calcState[1]);
+            calcText.setText(calcState[0]);
+            resultCalcText.setText(calcState[1]);});
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle  instanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle instanceState) {
         super.onSaveInstanceState(instanceState);
-        instanceState.putSerializable(CALCULATOR, calcDataAndMethods);
-        calcDataAndMethods.setCalcTextData(calcText.getText().toString());
-        calcDataAndMethods.setResultCalcTextData(resultCalcText.getText().toString());
+        calcDataAndMethods.setCalcTextData(calcState[0]);
+        calcDataAndMethods.setResultCalcTextData(calcState[1]);
+        instanceState.putParcelable(CALCULATOR, calcDataAndMethods);
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle  instanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle instanceState) {
         super.onRestoreInstanceState(instanceState);
-        calcDataAndMethods = (CalcDataAndMethods) instanceState.getSerializable(CALCULATOR);
-        calcText.setText(calcDataAndMethods.getCalcTextData());
-        resultCalcText.setText(calcDataAndMethods.getResultCalcTextData());
+        calcDataAndMethods = (CalcDataAndMethods) instanceState.getParcelable(CALCULATOR);
+        calcState[0] = calcDataAndMethods.getCalcTextData();
+        calcState[1] = calcDataAndMethods.getResultCalcTextData();
+        calcText.setText(calcState[0]);
+        resultCalcText.setText(calcState[1]);
     }
 
     @Override
@@ -123,4 +210,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(calcState);
+    }
 }
