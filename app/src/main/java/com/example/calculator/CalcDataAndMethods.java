@@ -27,12 +27,13 @@ public class CalcDataAndMethods implements Parcelable {
             return new CalcDataAndMethods[size];
         }
     };
+    private String ZERO_VAL_STR = "0";
     private String number = ZERO_VAL_STR;
     private boolean calcResume = false;
     private BigDecimal firstVal = BigDecimal.ZERO;
     private BigDecimal secondVal = BigDecimal.ZERO;
     private BigDecimal result = BigDecimal.ZERO;
-    private String ZERO_VAL_STR = "0";
+
 
     public  CalcDataAndMethods(){
     }
