@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
 
         String theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
 
-        if (theme.equals(Themes.LIGHT.getValue())) {
-            setTheme(R.style.Theme_AppCompat_Calculator);
-        } else setTheme(R.style.NightTheme_AppCompat_Calculator);
+        if (theme.equals(Themes.DARK.getValue())) {
+            setTheme(R.style.NightTheme_Calculator);
+        } else setTheme(R.style.Theme_Calculator);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

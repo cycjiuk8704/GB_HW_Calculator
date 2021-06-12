@@ -14,7 +14,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
     String theme;
 
-    SharedPreferences currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
+    SharedPreferences currentTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
         theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
 
         SwitchMaterial switchTheme = findViewById(R.id.switch1);
@@ -37,7 +38,8 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        theme = (isChecked ? Themes.LIGHT.getValue() : Themes.DARK.getValue());
+        theme = (isChecked ? Themes.DARK.getValue() : Themes.LIGHT.getValue());
+        currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = currentTheme.edit();
         editor.putString(THEME, theme);
         editor.apply();
