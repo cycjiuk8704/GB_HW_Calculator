@@ -5,5 +5,8 @@
     <dimen name="textview_text_size">42sp</dimen>
     <dimen name="button_0_width">0dp</dimen>
     <dimen name="textview_margin">20dp</dimen>
+    <dimen name="settings_button_dimen">60dp</dimen>
+    <dimen name="setting_button_inset">0dp</dimen>
+    <dimen name="button_corner_rad">16dp</dimen>
 
 </resources>

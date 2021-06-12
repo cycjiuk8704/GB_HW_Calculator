@@ -1,5 +1,8 @@
 package com.example.calculator;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -11,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class MainActivity extends AppCompatActivity implements Parcelable {
+public class MainActivity extends AppCompatActivity implements Parcelable, Constants{
 
     private static final String CALCULATOR = "Calculator";
     private CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
@@ -39,6 +42,15 @@ public class MainActivity extends AppCompatActivity implements Parcelable {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
+
+        String theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
+
+        if (theme.equals(Themes.LIGHT.getValue())) {
+            setTheme(R.style.Theme_AppCompat_Calculator);
+        } else setTheme(R.style.NightTheme_AppCompat_Calculator);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setBackgroundImage(getResources().getConfiguration().orientation);
@@ -76,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements Parcelable {
         Button buttonZero = findViewById(R.id.button_0);
         Button buttonPoint = findViewById(R.id.button_point);
         Button buttonEqual = findViewById(R.id.button_equals);
+        Button buttonSettings = findViewById(R.id.button_settings);
+
 
         buttonAC.setOnClickListener(v -> {
             calcDataAndMethods.pushButtonAC();
@@ -173,6 +187,12 @@ public class MainActivity extends AppCompatActivity implements Parcelable {
         buttonEqual.setOnClickListener(v -> {calcState = calcDataAndMethods.pushButtonEquals(calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);});
+
+        buttonSettings.setOnClickListener(v -> {
+            Intent runSettings = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(runSettings);
+        });
+
     }
 
     @Override

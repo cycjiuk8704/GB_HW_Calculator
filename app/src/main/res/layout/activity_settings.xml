@@ -5,6 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_settings_return"
+        style="@style/NumberButtonStyle"
+        android:layout_width="@dimen/settings_button_dimen"
+        android:layout_height="@dimen/settings_button_dimen"
+        android:insetTop="@dimen/setting_button_inset"
+        android:insetBottom="@dimen/setting_button_inset"
+        app:cornerRadius="@dimen/button_corner_rad"
+        app:icon="@android:drawable/ic_menu_revert"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch1"
         style="@style/ActionButtonStyle"
@@ -19,7 +35,7 @@
 
     <TextView
         android:id="@+id/textView"
-        style="@style/ActionButtonStyle"
+        style="@style/SettingsTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/night_mode"

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="NightTheme.Calculator" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="NightTheme.AppCompat.Calculator" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_pink</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -31,6 +31,13 @@
         <item name="android:textSize">@dimen/textview_text_size</item>
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textStyle">italic</item>
+        <item name="fontFamily">cursive</item>
+    </style>
+
+    <style name="SettingsTextStyle">
+        <item name="android:textSize">@dimen/button_text</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
         <item name="fontFamily">cursive</item>
     </style>
 </resources>
