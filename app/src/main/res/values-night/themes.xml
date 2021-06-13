@@ -1,12 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Calculator" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="NightTheme_Calculator" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_grey</item>
         <item name="colorPrimaryVariant">@color/grey</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/purple_700</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="NumberButtonStyle" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="NumberButtonStyle">
         <item name="android:textSize">@dimen/button_text</item>
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textStyle">normal</item>
@@ -29,14 +29,14 @@
 
     <style name="TextViewStyle">
         <item name="android:textSize">@dimen/textview_text_size</item>
-        <item name="android:textColor">@color/purple_pink</item>
+        <item name="android:textColor">@color/purple_700</item>
         <item name="android:textStyle">normal</item>
         <item name="fontFamily">casual</item>
     </style>
 
     <style name="SettingsTextStyle">
         <item name="android:textSize">@dimen/button_text</item>
-        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textStyle">bold</item>
         <item name="fontFamily">cursive</item>
     </style>

@@ -15,26 +15,33 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
     String theme;
 
-    SharedPreferences currentTheme;
+    private SharedPreferences currentTheme;
+    private SharedPreferences sharedPrefTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        sharedPrefTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
+        currentTheme = getSharedPreferences(CURRENT_THEME, Context.MODE_PRIVATE);
+
+        theme = sharedPrefTheme.getString(THEME, currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue()));
+
+        if (theme.equals(Themes.DARK.getValue())) {
+            setTheme(R.style.NightTheme_Calculator);
+        } else setTheme(R.style.Theme_Calculator);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
-        theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
-
         SwitchMaterial switchTheme = findViewById(R.id.switch1);
 
-        switchTheme.setChecked(theme.equals("Dark"));
+        switchTheme.setChecked(sharedPrefTheme.getString(THEME, currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue())).equals(Themes.DARK.getValue()));
 
         switchTheme.setOnCheckedChangeListener(this);
 
         Button btnReturn = findViewById(R.id.button_settings_return);
         btnReturn.setOnClickListener(v -> {
-            if (!theme.equals(currentTheme.getString(THEME, Themes.LIGHT.getValue()))) {
+            if (!currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue()).equals(sharedPrefTheme.getString(THEME, Themes.LIGHT.getValue()))) {
                 Intent intentResult = new Intent();
                 setResult(RESULT_OK, intentResult);
             }
@@ -47,8 +54,8 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         theme = (isChecked ? Themes.DARK.getValue() : Themes.LIGHT.getValue());
-        currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = currentTheme.edit();
+        sharedPrefTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefTheme.edit();
         editor.putString(THEME, theme);
         editor.apply();
         recreate();

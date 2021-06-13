@@ -9,7 +9,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -32,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
     private TextView calcText;
     private TextView resultCalcText;
     private String[] calcState = {"", "0"};
-    String theme;
+    private String theme;
+    private SharedPreferences currentTheme;
 
     public MainActivity() {
     }
@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        SharedPreferences currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
+        currentTheme = getSharedPreferences(CURRENT_THEME, Context.MODE_PRIVATE);
 
-        theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
+        theme = currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue());
 
         if (theme.equals(Themes.DARK.getValue())) {
             setTheme(R.style.NightTheme_Calculator);
@@ -190,11 +190,23 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
             resultCalcText.setText(calcState[1]);});
 
         buttonSettings.setOnClickListener(v -> {
+
+//            mStartForResult.launch(new Intent(this, SettingsActivity.class));
             Intent runSettings = new Intent(MainActivity.this, SettingsActivity.class);
             startActivityForResult(runSettings, REQUEST_CODE_SETTING_ACTIVITY);
         });
 
     }
+
+//    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+//            new ActivityResultCallback<ActivityResult>() {
+//                @Override
+//                public void onActivityResult(ActivityResult result) {
+//                    if (result.getResultCode() == Activity.RESULT_OK) {
+//                        recreate();
+//                    }
+//                }
+//            });
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != REQUEST_CODE_SETTING_ACTIVITY) {
@@ -203,6 +215,15 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         }
 
         if (resultCode == RESULT_OK){
+            currentTheme = getSharedPreferences(CURRENT_THEME, Context.MODE_PRIVATE);
+            if (theme.equals(Themes.LIGHT.getValue())) {
+                theme = Themes.DARK.getValue();
+            } else {
+                theme = Themes.LIGHT.getValue();
+            }
+            SharedPreferences.Editor editor = currentTheme.edit();
+            editor.putString(CURRENT_THEME, theme);
+            editor.apply();
             recreate();
         }
     }
