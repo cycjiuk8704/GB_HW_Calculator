@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         theme = currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue());
 
         if (theme.equals(Themes.DARK.getValue())) {
-            setTheme(R.style.NightTheme_Calculator);
-        } else setTheme(R.style.Theme_Calculator);
+            setTheme(R.style.themeNightCalculator);
+        } else setTheme(R.style.themeCalculator);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
             calcText.setText(calcState[0]);});
 
         buttonPercent.setOnClickListener(v -> {
-            calcState = calcDataAndMethods.pushButtonMath(CalcActions.PERCENT.getValue(), calcState[0], calcState[1]);
+            calcState = calcDataAndMethods.pushButtonMath(CalcOperator.PERCENT.getValue(), calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);
         });
 
         buttonDivide.setOnClickListener(v -> {
-            calcState = calcDataAndMethods.pushButtonMath(CalcActions.DIVIDE.getValue(), calcState[0], calcState[1]);
+            calcState = calcDataAndMethods.pushButtonMath(CalcOperator.DIVIDE.getValue(), calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);
         });
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         });
 
         buttonMultiply.setOnClickListener(v -> {
-            calcState = calcDataAndMethods.pushButtonMath(CalcActions.MULTIPLY.getValue(), calcState[0], calcState[1]);
+            calcState = calcDataAndMethods.pushButtonMath(CalcOperator.MULTIPLY.getValue(), calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);
         });
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         });
 
         buttonMinus.setOnClickListener(v -> {
-            calcState = calcDataAndMethods.pushButtonMath(CalcActions.SUBTRACT.getValue(), calcState[0], calcState[1]);
+            calcState = calcDataAndMethods.pushButtonMath(CalcOperator.SUBTRACT.getValue(), calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);
         });
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         });
 
         buttonPLus.setOnClickListener(v -> {
-            calcState = calcDataAndMethods.pushButtonMath(CalcActions.ADD.getValue(), calcState[0], calcState[1]);
+            calcState = calcDataAndMethods.pushButtonMath(CalcOperator.ADD.getValue(), calcState[0], calcState[1]);
             calcText.setText(calcState[0]);
             resultCalcText.setText(calcState[1]);
         });

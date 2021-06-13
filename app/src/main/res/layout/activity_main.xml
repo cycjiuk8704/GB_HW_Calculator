@@ -275,6 +275,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/textview_margin"
+        android:layout_marginHorizontal="@dimen/textViewMarginH"
         android:gravity="end"
         android:scrollbars = "horizontal"
         app:layout_constraintBottom_toTopOf="@id/calcResultTextView"
@@ -284,6 +285,7 @@
     <TextView
         android:id="@+id/calcResultTextView"
         style="@style/TextViewStyle"
+        android:layout_marginHorizontal="@dimen/textViewMarginH"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"

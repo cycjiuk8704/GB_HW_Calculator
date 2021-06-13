@@ -8,5 +8,6 @@
     <dimen name="settings_button_dimen">60dp</dimen>
     <dimen name="setting_button_inset">0dp</dimen>
     <dimen name="button_corner_rad">16dp</dimen>
+    <dimen name="textViewMarginH">15dp</dimen>
 
 </resources>

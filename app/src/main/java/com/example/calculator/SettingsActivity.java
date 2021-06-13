@@ -27,8 +27,8 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         theme = sharedPrefTheme.getString(THEME, currentTheme.getString(CURRENT_THEME, Themes.LIGHT.getValue()));
 
         if (theme.equals(Themes.DARK.getValue())) {
-            setTheme(R.style.NightTheme_Calculator);
-        } else setTheme(R.style.Theme_Calculator);
+            setTheme(R.style.themeNightCalculator);
+        } else setTheme(R.style.themeCalculator);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);

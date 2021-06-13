@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CalcDataAndMethods implements Parcelable {
     private String calcAction = "";
@@ -95,7 +96,7 @@ public class CalcDataAndMethods implements Parcelable {
             calcText = String.format(Locale.getDefault(), "%s", formatOutput(firstVal));
         } else if (calcText.equals("")) {
             calcText = "";
-        } else if (calcText.equals(ZERO_VAL_STR) && calcAction.equals(CalcActions.DIVIDE.getValue())) {
+        } else if (calcText.equals(ZERO_VAL_STR) && calcAction.equals(CalcOperator.DIVIDE.getValue())) {
             resultCalcText = "division by zero";
             calcAction = "";
             number = ZERO_VAL_STR;
@@ -132,29 +133,13 @@ public class CalcDataAndMethods implements Parcelable {
         String calcActionText = calcText;
         if (!TextUtils.isEmpty(calcActionText)) {
             String lastChar = calcActionText.substring(calcActionText.length() - 1);
-            if (CalcActions.contains(lastChar)){
+            if (CalcOperator.contains(lastChar)){
                 calcText = calcText.substring(0, calcText.length() - 1);
             }
         }
-        switch (calcAct) {
-            case ("%"):
-                calcText = calcText + "%";
-                break;
-            case ("/"):
-                calcText = calcText + "/";
-                break;
-            case ("x"):
-                calcText = calcText + "x";
-                break;
-            case ("-"):
-                calcText = calcText + "-";
-                break;
-            case ("+"):
-                calcText = calcText + "+";
-                break;
-            default:
-                throw new UnsupportedOperationException("unsupported calcAction value");
-        }
+        final CalcOperator action = CalcOperator.getInstance(calcAct);
+        Objects.requireNonNull(action, "Operation not supported: " + calcAct);
+        calcText = calcText + action.getValue();
         return new String[]{calcText, resultCalcText};
     }
 
@@ -165,20 +150,8 @@ public class CalcDataAndMethods implements Parcelable {
         } else {
             secondVal = BigDecimal.valueOf(Double.parseDouble(number));
             number = ZERO_VAL_STR;
-            switch (calcAction) {
-                case ("%"):
-                    return firstVal.multiply(secondVal.divide(BigDecimal.valueOf(100.0d), 9, BigDecimal.ROUND_HALF_UP));
-                case ("/"):
-                    return firstVal.divide(secondVal, 9, BigDecimal.ROUND_HALF_UP);
-                case ("x"):
-                    return firstVal.multiply(secondVal);
-                case ("-"):
-                    return firstVal.subtract(secondVal);
-                case ("+"):
-                    return firstVal.add(secondVal);
-                default:
-                    throw new UnsupportedOperationException("unsupported calcAction value");
-            }
+            return CalcOperator.requireInstance(calcAction).apply(firstVal, secondVal);
+
         }
     }
 
