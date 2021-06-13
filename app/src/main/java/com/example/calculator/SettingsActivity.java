@@ -3,6 +3,7 @@ package com.example.calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,7 +11,7 @@ import android.widget.CompoundButton;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-public class SettingsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, Constants{
+public class SettingsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, Constants {
 
     String theme;
 
@@ -32,9 +33,16 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         switchTheme.setOnCheckedChangeListener(this);
 
         Button btnReturn = findViewById(R.id.button_settings_return);
-        btnReturn.setOnClickListener(v -> finish());
-
+        btnReturn.setOnClickListener(v -> {
+            if (!theme.equals(currentTheme.getString(THEME, Themes.LIGHT.getValue()))) {
+                Intent intentResult = new Intent();
+                setResult(RESULT_OK, intentResult);
+            }
+            finish();
+        });
     }
+
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -43,6 +51,6 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         SharedPreferences.Editor editor = currentTheme.edit();
         editor.putString(THEME, theme);
         editor.apply();
-        onRestart();
+        recreate();
     }
 }

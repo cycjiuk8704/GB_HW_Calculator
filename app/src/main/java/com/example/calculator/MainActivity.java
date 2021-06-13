@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
     private TextView calcText;
     private TextView resultCalcText;
     private String[] calcState = {"", "0"};
+    String theme;
 
     public MainActivity() {
     }
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
 
         SharedPreferences currentTheme = getSharedPreferences(THEME, Context.MODE_PRIVATE);
 
-        String theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
+        theme = currentTheme.getString(THEME, Themes.LIGHT.getValue());
 
         if (theme.equals(Themes.DARK.getValue())) {
             setTheme(R.style.NightTheme_Calculator);
@@ -190,10 +191,22 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
 
         buttonSettings.setOnClickListener(v -> {
             Intent runSettings = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(runSettings);
+            startActivityForResult(runSettings, REQUEST_CODE_SETTING_ACTIVITY);
         });
 
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != REQUEST_CODE_SETTING_ACTIVITY) {
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+
+        if (resultCode == RESULT_OK){
+            recreate();
+        }
+    }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle instanceState) {
@@ -228,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
         else if (orientation == Configuration.ORIENTATION_PORTRAIT)
             layout.setBackgroundResource(R.drawable.calc_bg_v);
     }
+
 
 
     @Override
