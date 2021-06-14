@@ -5,41 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class MainActivity extends AppCompatActivity implements Parcelable, Constants{
+public class MainActivity extends AppCompatActivity implements Constants{
 
     private static final String CALCULATOR = "Calculator";
     private CalcDataAndMethods calcDataAndMethods = new CalcDataAndMethods();
-    public static final Creator<MainActivity> CREATOR = new Creator<MainActivity>() {
-        @Override
-        public MainActivity createFromParcel(Parcel in) {
-            return new MainActivity(in);
-        }
-
-        @Override
-        public MainActivity[] newArray(int size) {
-            return new MainActivity[size];
-        }
-    };
     private TextView calcText;
     private TextView resultCalcText;
     private String[] calcState = {"", "0"};
     private String theme;
     private SharedPreferences currentTheme;
-
-    public MainActivity() {
-    }
-
-    protected MainActivity(Parcel in) {
-        calcState = in.createStringArray();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,22 +171,11 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
 
         buttonSettings.setOnClickListener(v -> {
 
-//            mStartForResult.launch(new Intent(this, SettingsActivity.class));
             Intent runSettings = new Intent(MainActivity.this, SettingsActivity.class);
             startActivityForResult(runSettings, REQUEST_CODE_SETTING_ACTIVITY);
         });
 
     }
-
-//    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        recreate();
-//                    }
-//                }
-//            });
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != REQUEST_CODE_SETTING_ACTIVITY) {
@@ -263,15 +232,4 @@ public class MainActivity extends AppCompatActivity implements Parcelable, Const
             layout.setBackgroundResource(R.drawable.calc_bg_v);
     }
 
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(calcState);
-    }
 }
