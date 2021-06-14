@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CalcLauncherByIntentFilter</string>
+    <string name="buttonText">посчитать</string>
+</resources>

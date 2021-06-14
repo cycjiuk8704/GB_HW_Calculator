@@ -19,4 +19,5 @@
     <string name="_minus">-</string>
     <string name="_plus">+</string>
     <string name="_equals">=</string>
+    <string name="night_mode">Night mode</string>
 </resources>
