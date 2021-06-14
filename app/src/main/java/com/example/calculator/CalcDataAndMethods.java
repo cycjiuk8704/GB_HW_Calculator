@@ -1,26 +1,57 @@
 package com.example.calculator;
 
 import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
-import android.widget.TextView;
 
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-public class CalcDataAndMethods implements Serializable {
+public class CalcDataAndMethods implements Parcelable {
     private String calcAction = "";
     private String calcTextData;
     private String resultCalcTextData;
     private boolean init = true;
     private boolean isInteger = true;
-    private final String ZERO_VAL_STR = "0";
+    public static final Creator<CalcDataAndMethods> CREATOR = new Creator<CalcDataAndMethods>() {
+        @Override
+        public CalcDataAndMethods createFromParcel(Parcel in) {
+            return new CalcDataAndMethods(in);
+        }
+
+        @Override
+        public CalcDataAndMethods[] newArray(int size) {
+            return new CalcDataAndMethods[size];
+        }
+    };
+    private String ZERO_VAL_STR = "0";
     private String number = ZERO_VAL_STR;
     private boolean calcResume = false;
     private BigDecimal firstVal = BigDecimal.ZERO;
     private BigDecimal secondVal = BigDecimal.ZERO;
     private BigDecimal result = BigDecimal.ZERO;
+
+
+    public  CalcDataAndMethods(){
+    }
+
+    protected CalcDataAndMethods(Parcel in) {
+        calcAction = in.readString();
+        calcTextData = in.readString();
+        resultCalcTextData = in.readString();
+        init = in.readByte() != 0;
+        isInteger = in.readByte() != 0;
+        ZERO_VAL_STR = in.readString();
+        number = in.readString();
+        calcResume = in.readByte() != 0;
+        firstVal = new BigDecimal(in.readString());
+        secondVal = new BigDecimal(in.readString());
+        result = new BigDecimal(in.readString());
+
+    }
 
     public String getCalcTextData() {
         return calcTextData;
@@ -38,34 +69,34 @@ public class CalcDataAndMethods implements Serializable {
         this.resultCalcTextData = resultCalcTextData;
     }
 
-    public void addNumber(String num, TextView calcText) {
+    public String addNumber(String num, String calcText) {
         if (number.equals(ZERO_VAL_STR)) {
             if (init) {
                 number = num;
-                calcText.setText(num);
+                calcText = num;
                 init = false;
                 calcResume = false;
             } else {
                 number = num;
-                calcText.append(num);
+                calcText = calcText + num;
             }
         } else {
             number = number + num;
-            calcText.append(num);
+            calcText = calcText + num;
         }
-
+        return calcText;
     }
 
     @SuppressLint("SetTextI18n")
-    public void pushButtonMath(String calcAct, TextView calcText, TextView resultCalcText) {
+    public String[] pushButtonMath(String calcAct, String calcText, String resultCalcText) {
 
-        if (calcAction.isEmpty() && !firstVal.equals(BigDecimal.ZERO) && calcText.getText().toString().equals("")) {
+        if (calcAction.isEmpty() && !firstVal.equals(BigDecimal.ZERO) && calcText.equals("")) {
             init = false;
-            calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
-        } else if (calcText.getText().toString().equals("")) {
-            return;
-        } else if (calcText.getText().toString().equals(ZERO_VAL_STR) && calcAction.equals(CalcActions.DIVIDE.getValue())) {
-            resultCalcText.setText("division by zero");
+            calcText = String.format(Locale.getDefault(), "%s", formatOutput(firstVal));
+        } else if (calcText.equals("")) {
+            calcText = "";
+        } else if (calcText.equals(ZERO_VAL_STR) && calcAction.equals(CalcActions.DIVIDE.getValue())) {
+            resultCalcText = "division by zero";
             calcAction = "";
             number = ZERO_VAL_STR;
             isInteger = true;
@@ -73,22 +104,22 @@ public class CalcDataAndMethods implements Serializable {
             secondVal = BigDecimal.ZERO;
             result = BigDecimal.ZERO;
             init = true;
-            calcText.setText("");
+            calcText = "";
 
         } else if (!calcAction.isEmpty() && result.equals(BigDecimal.ZERO)) {
             result = calculate(calcAction);
-            resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
+            resultCalcText = String.format(Locale.getDefault(), "%s", formatOutput(result));
             firstVal = result;
             result = BigDecimal.ZERO;
 
         } else if (!calcAction.isEmpty()) {
             firstVal = result;
             result = calculate(calcAction);
-            resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
+            resultCalcText = String.format(Locale.getDefault(), "%s", formatOutput(result));
             result = BigDecimal.ZERO;
 
         } else if (!firstVal.equals(BigDecimal.ZERO) && calcResume) {
-            calcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(firstVal)));
+            calcText = String.format(Locale.getDefault(), "%s", formatOutput(firstVal));
 
         } else {
             firstVal = BigDecimal.valueOf(Double.parseDouble(number));
@@ -98,32 +129,33 @@ public class CalcDataAndMethods implements Serializable {
         calcResume = true;
 
         calcAction = calcAct;
-        String calcActionText = calcText.getText().toString();
+        String calcActionText = calcText;
         if (!TextUtils.isEmpty(calcActionText)) {
             String lastChar = calcActionText.substring(calcActionText.length() - 1);
             if (CalcActions.contains(lastChar)){
-                calcText.setText(calcText.getText().subSequence(0, calcText.getText().length() - 1));
+                calcText = calcText.substring(0, calcText.length() - 1);
             }
         }
         switch (calcAct) {
             case ("%"):
-                calcText.append("%");
+                calcText = calcText + "%";
                 break;
             case ("/"):
-                calcText.append("/");
+                calcText = calcText + "/";
                 break;
             case ("x"):
-                calcText.append("x");
+                calcText = calcText + "x";
                 break;
             case ("-"):
-                calcText.append("-");
+                calcText = calcText + "-";
                 break;
             case ("+"):
-                calcText.append("+");
+                calcText = calcText + "+";
                 break;
             default:
                 throw new UnsupportedOperationException("unsupported calcAction value");
         }
+        return new String[]{calcText, resultCalcText};
     }
 
     @SuppressLint("SetTextI18n")
@@ -150,36 +182,36 @@ public class CalcDataAndMethods implements Serializable {
         }
     }
 
-    public void pushButtonDel(TextView calcText) {
-        if (!calcText.getText().toString().equals("") && !number.equals("")) {
-            calcText.setText(calcText.getText().toString().subSequence(0, calcText.getText().toString().length() - 1));
+    public String pushButtonDel(String calcText) {
+        if (!calcText.equals("") && !number.equals("")) {
+            calcText = calcText.substring(0, calcText.length() - 1);
             number = number.substring(0, number.length() - 1);
             isInteger = true;
         }
+        return calcText;
     }
 
-    public void pushButtonPoint(TextView calcText) {
+    public String pushButtonPoint(String calcText) {
         if (isInteger) {
             isInteger = false;
             init = false;
-            if (number.equals("") || calcText.getText().toString().equals("")) {
-                calcText.append("0,");
+            if (number.equals("") || calcText.equals("")) {
+                calcText += "0,";
                 number += "0.";
             } else {
-                calcText.append(",");
+                calcText += ",";
                 number += ".";
             }
         }
+        return calcText;
     }
 
-    public void pushButtonEquals(TextView resultCalcText, TextView calcText) {
-        if (firstVal.equals(BigDecimal.ZERO)) {
-            return;
-        } else {
+    public String[] pushButtonEquals(String calcText, String resultCalcText) {
+        if (!firstVal.equals(BigDecimal.ZERO)) {
             result = calculate(calcAction);
-            resultCalcText.setText(String.format(Locale.getDefault(), "%s", formatOutput(result)));
+            resultCalcText = String.format(Locale.getDefault(), "%s", formatOutput(result));
             firstVal = result;
-            calcText.setText("");
+            calcText = "";
         }
         number = ZERO_VAL_STR;
         isInteger = true;
@@ -188,11 +220,10 @@ public class CalcDataAndMethods implements Serializable {
         secondVal = BigDecimal.ZERO;
         result = BigDecimal.ZERO;
         calcResume = true;
+        return new String[] {calcText, resultCalcText};
     }
 
-    public void pushButtonAC(TextView resultCalcText, TextView calcText) {
-        calcText.setText("");
-        resultCalcText.setText("");
+    public void pushButtonAC() {
         calcAction = "";
         number = ZERO_VAL_STR;
         isInteger = true;
@@ -212,4 +243,23 @@ public class CalcDataAndMethods implements Serializable {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(calcAction);
+        dest.writeString(calcTextData);
+        dest.writeString(resultCalcTextData);
+        dest.writeByte((byte) (init ? 1 : 0));
+        dest.writeByte((byte) (isInteger ? 1 : 0));
+        dest.writeString(ZERO_VAL_STR);
+        dest.writeString(number);
+        dest.writeByte((byte) (calcResume ? 1 : 0));
+        dest.writeString(firstVal.toString());
+        dest.writeString(secondVal.toString());
+        dest.writeString(result.toString());
+    }
 }
